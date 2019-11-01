@@ -1,0 +1,83 @@
+
+            <View style={{flex: 2, backgroundColor: '#212121', alignItems: 'center'}}>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TouchableOpacity style={{ width: 80, height: 40, marginHorizontal: 10, marginVertical: 10, backgroundColor: '#FFFFFF', justifyContent: "center", alignItems: "center" }}>
+                  <Text>Quantity</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ width: 80, height: 40, marginHorizontal: 10, marginVertical: 10, backgroundColor: '#FFFFFF', justifyContent: "center", alignItems: "center" }}>
+                  <Text>2</Text>
+                </TouchableOpacity>
+
+              </View>
+
+
+              <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity style={{ width: 40, height: 40, marginHorizontal: 10, marginVertical: 10, backgroundColor: '#FFFFFF', justifyContent: "center", alignItems: "center" }}>
+                  <Text>1</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ width: 40, height: 40, marginHorizontal: 10, marginVertical: 10, backgroundColor: '#FFFFFF', justifyContent: "center", alignItems: "center" }}>
+                  <Text>2</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ width: 40, height: 40, marginHorizontal: 10, marginVertical: 10, backgroundColor: '#FFFFFF', justifyContent: "center", alignItems: "center" }}>
+                  <Text>3</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ width: 40, height: 40, marginHorizontal: 10, marginVertical: 10, backgroundColor: '#FFFFFF', justifyContent: "center", alignItems: "center" }}>
+                  <Text>4</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TouchableOpacity style={{ width: 40, height: 40, marginHorizontal: 10, marginVertical: 10, backgroundColor: '#FFFFFF', justifyContent: "center", alignItems: "center" }}>
+                  <Text>5</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ width: 40, height: 40, marginHorizontal: 10, marginVertical: 10, backgroundColor: '#FFFFFF', justifyContent: "center", alignItems: "center" }}>
+                  <Text>6</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ width: 40, height: 40, marginHorizontal: 10, marginVertical: 10, backgroundColor: '#FFFFFF', justifyContent: "center", alignItems: "center" }}>
+                  <Text>7</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ width: 40, height: 40, marginHorizontal: 10, marginVertical: 10, backgroundColor: '#FFFFFF', justifyContent: "center", alignItems: "center" }}>
+                  <Text>8</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ flexDirection: 'row' }}>
+                <TouchableOpacity style={{ width: 40, height: 40, marginHorizontal: 10, marginVertical: 10, backgroundColor: '#FFFFFF', justifyContent: "center", alignItems: "center" }}>
+                  <Text>9</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ width: 40, height: 40, marginHorizontal: 10, marginVertical: 10, backgroundColor: '#FFFFFF', justifyContent: "center", alignItems: "center" }}>
+                  <Text>0</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ width: 40, height: 40, marginHorizontal: 10, marginVertical: 10, backgroundColor: '#FFFFFF', justifyContent: "center", alignItems: "center" }}>
+                  <Text>-</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ width: 40, height: 40, marginHorizontal: 10, marginVertical: 10, backgroundColor: '#FFFFFF', justifyContent: "center", alignItems: "center" }}>
+                  <Text>+</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ flexDirection: 'row' }}>
+
+                <TouchableOpacity style={{ width: 80, height: 40, marginHorizontal: 10, marginVertical: 10, backgroundColor: '#FFFFFF', justifyContent: "center", alignItems: "center" }}>
+                  <Text>CANCEL</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ width: 80, height: 40, marginHorizontal: 10, marginVertical: 10, backgroundColor: '#FFFFFF', justifyContent: "center", alignItems: "center" }}
+                  onPress={() => { this.setState({ enable: !this.state.enable }) }}
+                >
+                  <Text>OK</Text>
+                </TouchableOpacity>
+              </View>
+              
+            </View>

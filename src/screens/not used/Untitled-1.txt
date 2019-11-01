@@ -1,0 +1,546 @@
+import React, { Component } from 'react';
+import {
+    View,
+    Text,
+    Button,
+    Platform,
+    TouchableOpacity,
+    Linking,
+    TextInput,
+    ScrollView,
+    StyleSheet,
+    StatusBar,
+    Image,
+    Picker,
+    CheckBox,
+} from 'react-native';
+import NfcManager, { Ndef } from 'react-native-nfc-manager';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { FlatGrid } from 'react-native-super-grid';
+import { TextInputMask } from 'react-native-masked-text'
+
+import { Dropdown } from 'react-native-material-dropdown';
+import Display from 'react-native-display';
+class Registration extends Component {
+    static navigationOptions = {
+        header: null
+    }
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            supported: true,
+            enabled: false,
+            isWriting: false,
+            tag: {},
+            parsed: null,
+
+
+            id: '1900000000000000',
+            name: 'Guess 0',
+            companyCode: '0',
+            eventCode: '0',
+            regDateTime: 'YYMMDDhhmm',
+            publicKey: 'ARS',
+            lastTopUp: '0',
+            balance: '0',
+            
+            topUpMethod: 'CASH',
+            tagWarranty: '0',
+
+            topUpAmount: '0',
+
+            increment: '1',
+            incrementStart: '0',
+            totalBalance: '0',
+            startTagPressed: true,
+
+            otherTopUpAmount: false,
+
+            checked: false,
+        }
+    }
+
+
+    componentDidMount() {
+        NfcManager.isSupported()
+            .then(supported => {
+                this.setState({ supported });
+                if (supported) {
+                    this._startNfc();
+                }
+            })
+    }
+
+    componentWillUnmount() {
+        if (this._stateChangedSubscription) {
+            this._stateChangedSubscription.remove();
+        }
+    }
+
+    render() {
+        
+        let { supported, enabled, tag, isWriting, parsed } = this.state;
+        return (
+            <View style={{flex: 1}}>
+                <StatusBar
+                    backgroundColor="#EEEEEE"
+                    barStyle="dark-content"
+                />
+
+                <View style={styles.header}>
+                    <TouchableOpacity style={{ height: 25, width: 25, justifyContent: 'center', alignItems: 'center', marginLeft: 15 }}
+                        onPress={() => this.props.navigation.navigate('Home')}
+                    >
+                        <Icon name='md-home' size={25} color='#616161' />
+                    </TouchableOpacity>
+                    <View style={{ flex: 1, alignItems: 'center' }}>
+                        <Image source={require('../../src/images/prochain.jpg')} style={{ width: 100, height: 100 }} resizeMode='contain' />
+                    </View>
+                    <TouchableOpacity style={{ height: 25, width: 25, justifyContent: 'center', alignItems: 'center', marginRight: 15 }} onPress={() => this.drawer.openDrawer()}>
+                        <Icon name='md-menu' size={25} color='#FF5722' />
+                    </TouchableOpacity>
+                </View>
+                <ScrollView style={{ flex: 1 }}>
+
+                        <Text style={{ marginVertical: 20, fontSize: 18, textAlign:"center" }}>REGISTRATION</Text>
+                        
+                    <View style={{ marginHorizontal: 20, flexDirection: "row", alignItems: "center" }}>
+                        <View style={{ marginHorizontal: 10, flex: 1 }}>
+                            <Text style={{ marginTop: 10, fontSize: 18 }}>ID</Text>
+                        </View>
+                        <TextInput
+                            style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginTop: 10, flex: 1, paddingLeft: 10 }}
+                            onChangeText={(text) => this.setState({ id: text})}
+                            value={this.state.id}
+                        />
+                    </View>
+
+
+                    <View style={{ marginHorizontal: 20, flexDirection: "row", alignItems: "center" }}>
+                        <View style={{ marginHorizontal: 10, flex: 1 }}>
+                            <Text style={{ marginTop: 10, fontSize: 18 }}>Name</Text>
+                        </View>
+                        <TextInput
+                            style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginTop: 10, flex: 1, paddingLeft: 10 }}
+                            onChangeText={(text) => this.setState({ name: text })}
+                            value={this.state.name}
+                        />
+                    </View>
+
+                    <View style={{ marginHorizontal: 20, flexDirection: "row", alignItems: "center" }}>
+                        <View style={{ marginHorizontal: 10, flex: 1 }}>
+                            <Text style={{ marginTop: 10, fontSize: 18 }}>Company Code</Text>
+                        </View>
+                        <TextInput
+                            style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginTop: 10, flex: 1, paddingLeft: 10 }}
+                            onChangeText={(text) => this.setState({ companyCode: text })}
+                            value={this.state.companyCode}
+                        />
+                    </View>
+                    <View style={{ marginHorizontal: 20, flexDirection: "row", alignItems: "center" }}>
+                        <View style={{ marginHorizontal: 10, flex: 1 }}>
+                            <Text style={{ marginTop: 10, fontSize: 18 }}>Event Code</Text>
+                        </View>
+                        <TextInput
+                            style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginTop: 10, flex: 1, paddingLeft: 10 }}
+                            onChangeText={(text) => this.setState({ eventCode: text })}
+                            value={this.state.eventCode}
+                        />
+                    </View>
+                    <View style={{ marginHorizontal: 20, flexDirection: "row", alignItems: "center" }}>
+                        <View style={{ marginHorizontal: 10, flex: 1 }}>
+                            <Text style={{ marginTop: 10, fontSize: 18 }}>Balance</Text>
+                        </View>
+                        <TextInputMask
+                            type={'money'}
+                            options={{
+                                precision: 2,
+                                separator: ',',
+                                delimiter: '.',
+                                unit: 'Rp. ',
+                                suffixUnit: ''
+                            }}
+                            value={this.state.balance}
+                            onChangeText={text => {
+                                this.setState({
+                                    balance: text
+                                })
+                            }}
+                            style={{ borderWidth: 1, flex: 1, height: 40, marginTop: 10, paddingLeft: 10, borderColor: 'gray',}}
+                        />
+                    </View>
+
+                    <View style={{ marginHorizontal: 20, flexDirection: "row", alignItems: "center" }}>
+                        <View style={{ marginHorizontal: 10, flex: 1 }}>
+                            <Text style={{ marginTop: 10, fontSize: 18 }}>Tag Warranty</Text>
+                        </View>
+
+                        <TextInputMask
+                            type={'money'}
+                            options={{
+                                precision: 2,
+                                separator: ',',
+                                delimiter: '.',
+                                unit: 'Rp. ',
+                                suffixUnit: '',
+                            }}
+                            includeRawValueInChangeText={true}
+                            value={this.state.tagWarranty}
+                            onChangeText={(text, rawValue) => {
+                                this.setState({
+                                    tagWarranty: text
+                                })
+                            }}
+                            style={{ borderWidth: 1, flex: 1, height: 40, marginTop: 10, paddingLeft: 10, borderColor: 'gray', }}
+                        />
+                    </View>
+
+                    <View style={{ marginHorizontal: 20, flexDirection: "row", alignItems: "center"}}>
+                        <View style={{ marginHorizontal: 10, flex: 1 }}>
+                            <Text style={{ marginTop: 10, fontSize: 18 }}>Top Up Amount</Text>
+                        </View>
+                            <Picker
+                                enabled={!this.state.otherTopUpAmount}
+                                style={{ flex: 1, marginTop: 10 }}
+                                selectedValue={this.state.topUpAmount}
+                                onValueChange={(itemValue, itemIndex) =>
+                                    this.setState({ topUpAmount: itemValue })
+                                }>
+                                <Picker.Item label="50.000,00" value="5000000" />
+                                <Picker.Item label="100.000,00" value="10000000" />
+                                <Picker.Item label="200.000,00" value="20000000" />
+                                <Picker.Item label="300.000,00" value="30000000" />
+                                <Picker.Item label="400.000,00" value="40000000" />
+                                <Picker.Item label="500.000,00" value="50000000" />
+                            </Picker>
+
+                        
+
+                        <TouchableOpacity style={{ borderWidth: 1, borderRadius: 3, padding: 10, marginTop: 10}}
+                            onPress={() => this.setState({ otherTopUpAmount: !this.state.otherTopUpAmount })}
+                        >
+                            <Text>OTHER</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <Display enable={this.state.otherTopUpAmount} style={{marginHorizontal: 30}}>
+                        <TextInputMask
+                            type={'money'}
+                            options={{
+                                precision: 2,
+                                separator: ',',
+                                delimiter: '.',
+                                unit: 'Rp. ',
+                                suffixUnit: ''
+                            }}
+                            value={this.state.topUpAmount}
+                            onChangeText={text => {
+                                this.setState({
+                                    topUpAmount: text
+                                })
+                            }}
+                            style={{ borderWidth: 1, flex: 1, height: 40, marginTop: 10, paddingLeft: 10, borderColor: 'gray', }}
+                        />
+                    </Display>
+                    
+
+                    <View style={{ marginHorizontal: 20, flexDirection: "row", alignItems: "center" }}>
+                        <View style={{ marginHorizontal: 10, flex: 1 }}>
+                            <Text style={{ marginTop: 10, fontSize: 18 }}>TOP UP METHOD</Text>
+                        </View>
+                        <Picker
+                            selectedValue={this.state.topUpMethod}
+                            style={{ flex: 1, marginTop: 10 }}
+
+                            onValueChange={(itemValue, itemIndex) =>
+                                this.setState({ topUpMethod: itemValue })
+                            }>
+                            <Picker.Item label="CASH" value="CASH" />
+                            <Picker.Item label="CCARD" value="CCARD" />
+                            <Picker.Item label="DCARD" value="DCARD" />
+                            <Picker.Item label="TCARD" value="TCARD" />
+                        </Picker>
+                    </View>
+
+                    <View style={{ flexDirection: 'column'}}>
+                        <View style={{ flexDirection: 'row', marginLeft: 30 }}>
+                            <CheckBox
+                                value={this.state.checked}
+                                onValueChange={() => this.setState({ checked: !this.state.checked })}
+                            />
+                            <Text style={{ marginTop: 5 }}> Auto Increment</Text>
+                        </View>
+
+                        <Display enable={this.state.checked}>
+                            <View style={{ marginHorizontal: 20, flexDirection: "row", alignItems: "center" }}>
+                                <View style={{ marginHorizontal: 10, flex: 1 }}>
+                                    <Text style={{ marginTop: 10, fontSize: 18 }}>Starting Number</Text>
+
+                                </View>
+                                <TextInput
+                                    style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginTop: 10, flex: 1, paddingLeft: 10 }}
+                                    onChangeText={(text) => this.setState({ incrementStart: text })}
+                                    value={this.state.incrementStart}
+                                    keyboardType={'numeric'}
+                                />
+                            </View>
+                            <Text style={{ marginTop: 10, fontSize: 12, textAlign: "center" }}>Make sure last ID number same with starting number</Text>
+
+                            <View style={{ marginHorizontal: 20, flexDirection: "row", alignItems: "center" }}>
+                                <View style={{ marginHorizontal: 10, flex: 1 }}>
+                                    <Text style={{ marginTop: 10, fontSize: 18 }}>Increment</Text>
+                                </View>
+                                <TextInput
+                                    style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginTop: 10, flex: 1, paddingLeft: 10 }}
+                                    onChangeText={(text) => this.setState({ increment: text })}
+                                    value={this.state.increment}
+                                    keyboardType={'numeric'}
+                                />
+                            </View>
+                        </Display>
+                    </View>
+
+                    <Text style={{ marginTop: 20, fontSize: 18, marginHorizontal: 30 }}>NFC STATUS : {NfcManager.isEnabled() ? "READY" : "NOT READY"}</Text>
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginTop: 30 }}>
+                        <View style={{ justifyContent: 'center', alignItems: "center", }}>
+                            <TouchableOpacity style={{ backgroundColor: '#4caf50', height: 50, width: 150, borderWidth: 1, borderRadius: 3, marginRight: 10, borderColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center' }}
+                                onPress={this._startDetection}
+                            >
+                                <Text style={{ fontSize: 16, color: '#FFFFFF', textAlign: "center" }}>Start Tag Detection</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{ justifyContent: 'center', alignItems: "center", }}>
+                            <TouchableOpacity style={{ backgroundColor: '#9e9e9e', height: 50, width: 150, borderWidth: 1, borderRadius: 3, marginRight: 10, borderColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center' }}
+                                onPress={this._stopDetection}
+                            >
+                                <Text style={{ fontSize: 16, color: '#FFFFFF', textAlign: "center" }}>Stop Tag Detection</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
+                    <View style={{ justifyContent: 'center', alignItems: "center", marginVertical: 40 }}>
+                        <TouchableOpacity style={{ backgroundColor: this.state.startTagPressed ? '#9e9e9e' :'#f44336', height: 50, width: 200, borderWidth: 1, borderRadius: 3, marginRight: 10, borderColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center' }}
+                            onPress={isWriting ? this._cancelNdefWrite : this._topUp}
+                            disabled={this.state.startTagPressed}
+                        >
+                            <Text style={{ fontSize: 18, color: '#FFFFFF' }}>{isWriting ? 'Cancel' : 'Write & Release Tag'}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            </View>
+        )
+    }
+
+    // balance 2x karena balance sama dengan last top up untuk pertama kali
+    // name auto bernama guess + id
+
+    _increment = () => {
+        let increment = parseInt(this.state.increment);
+        let incrementStart = parseInt(this.state.incrementStart);
+        
+        let id = parseInt(this.state.id) + parseInt(increment);
+        let name = 'Guess ' + (parseInt(incrementStart) + parseInt(increment));
+
+        incrementStart += increment;
+        increment = String(increment);
+        incrementStart = String(incrementStart);
+
+        id = String(id);
+
+        this.setState({ 
+            id: id,
+            incrementStart: incrementStart,
+            name: name,
+        })
+    }
+
+    _topUp = () => {
+        let balance = (parseInt(this.state.balance) + parseInt(this.state.topUpAmount));
+        balance = String(balance);
+
+        this.setState({
+            totalBalance: balance,
+        }, this._requestNdefWrite
+
+        )
+    }
+
+    _write = () => {
+
+        this._topUp();
+        
+    }
+
+    _requestNdefWrite = () => {
+        let { isWriting } = this.state;
+        if (isWriting) {
+            return;
+        }
+        
+        function pad2(n) { return n < 10 ? '0' + n : n }
+        var date = new Date();
+        
+
+        dateNow = date.getFullYear().toString().substr(2, 2) + pad2(date.getMonth() + 1) + pad2(date.getDate()) + pad2(date.getHours()) + pad2(date.getMinutes());
+        this.setState({
+            regDateTime: date,
+        })
+
+        let bytes = Ndef.encodeMessage([
+            Ndef.textRecord(this.state.id),
+            Ndef.textRecord(this.state.name),
+            Ndef.textRecord(this.state.companyCode),
+            Ndef.textRecord(this.state.eventCode),
+            Ndef.textRecord(dateNow),
+            Ndef.textRecord(this.state.publicKey),
+            Ndef.textRecord(this.state.topUpAmount),
+            Ndef.textRecord(this.state.totalBalance),
+            Ndef.textRecord(this.state.topUpMethod),
+            Ndef.textRecord(this.state.tagWarranty),
+        ]);
+
+        this.setState({ isWriting: true });
+        
+        NfcManager.requestNdefWrite(bytes)
+            .then(() => console.log('write completed'))
+            .catch(err => console.warn(err))
+            .then(() => this.setState({ isWriting: false }));
+        
+        if(this.state.checked)
+        {
+            this._increment();
+        }
+    }
+
+    _cancelNdefWrite = () => {
+        this.setState({ isWriting: false });
+        NfcManager.cancelNdefWrite()
+            .then(() => console.log('write cancelled'))
+            .catch(err => console.warn(err))
+    }
+
+    _startNfc() {
+        NfcManager.start({
+            onSessionClosedIOS: () => {
+                console.log('ios session closed');
+            }
+        })
+            .then(result => {
+                console.log('start OK', result);
+            })
+            .catch(error => {
+                console.warn('start fail', error);
+                this.setState({ supported: false });
+            })
+
+        if (Platform.OS === 'android') {
+            NfcManager.getLaunchTagEvent()
+                .then(tag => {
+                    console.log('launch tag', tag);
+                    if (tag) {
+                        this.setState({ tag });
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+            NfcManager.isEnabled()
+                .then(enabled => {
+                    this.setState({ enabled });
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+            NfcManager.onStateChanged(
+                event => {
+                    if (event.state === 'on') {
+                        this.setState({ enabled: true });
+                    } else if (event.state === 'off') {
+                        this.setState({ enabled: false });
+                    } else if (event.state === 'turning_on') {
+                        // do whatever you want
+                    } else if (event.state === 'turning_off') {
+                        // do whatever you want
+                    }
+                }
+            )
+                .then(sub => {
+                    this._stateChangedSubscription = sub;
+                    // remember to call this._stateChangedSubscription.remove()
+                    // when you don't want to listen to this anymore
+                })
+                .catch(err => {
+                    console.warn(err);
+                })
+        }
+    }
+
+    _onTagDiscovered = tag => {
+        console.log('Tag Discovered', tag);
+        this.setState({ tag });
+
+        let parsed = null;
+        if (tag.ndefMessage && tag.ndefMessage.length > 0) {
+            // ndefMessage is actually an array of NdefRecords, 
+            // and we can iterate through each NdefRecord, decode its payload 
+            // according to its TNF & type
+            const ndefRecords = tag.ndefMessage;
+
+            function decodeNdefRecord(record) {
+                if (Ndef.isType(record, Ndef.TNF_WELL_KNOWN, Ndef.RTD_TEXT)) {
+                    return ['text', Ndef.text.decodePayload(record.payload)];
+                } else if (Ndef.isType(record, Ndef.TNF_WELL_KNOWN, Ndef.RTD_URI)) {
+                    return ['uri', Ndef.uri.decodePayload(record.payload)];
+                }
+
+                return ['unknown', '---']
+            }
+
+            parsed = ndefRecords.map(decodeNdefRecord);
+        }
+
+        this.setState({ parsed });
+    }
+
+    _startDetection = () => {
+        this.setState({startTagPressed: false});
+        NfcManager.registerTagEvent(this._onTagDiscovered)
+            .then(result => {
+                console.log('registerTagEvent OK', result)
+            })
+            .catch(error => {
+                console.warn('registerTagEvent fail', error)
+            })
+    }
+
+    _stopDetection = () => {
+        this.setState({ startTagPressed: true });
+        NfcManager.unregisterTagEvent()
+            .then(result => {
+                console.log('unregisterTagEvent OK', result)
+            })
+            .catch(error => {
+                console.warn('unregisterTagEvent fail', error)
+            })
+    }
+
+    _clearMessages = () => {
+        this.setState({ tag: null, parsed: null });
+    }
+}
+
+const styles = StyleSheet.create({
+    header: {
+        height: 54,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#FFFFFF',
+        borderBottomColor: '#bdbdbd',
+        borderBottomWidth: 1,
+        flexDirection: 'row'
+    },
+});
+
+
+export default Registration;
